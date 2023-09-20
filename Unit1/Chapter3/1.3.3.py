@@ -1,0 +1,7 @@
+name = input('你的你姓名：')
+gender = input('你的性别：')
+ID = input('你的ID：')
+print('---- info ----')
+print(f"Name   :  {name}")
+print(f"Gender :  {gender}")
+print(f"ID     :  {ID}")
