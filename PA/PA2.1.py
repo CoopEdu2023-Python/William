@@ -68,10 +68,8 @@ while p(dict_1['r'], dict_1['t'], dict_1['y'], dict_1['f'], dict_1['g'], dict_1[
         continue
     # 保证棋盘上最多六个棋子
     if num > 6:
-        dict_1[list_1[0]] = ' '
-        list_1.pop(0)
+        dict_1[list_1[num-7]] = ' '
     # 回合转换
-
     if who == 'X':
         print('\n' * 50 + "玩家2号的回合：")
         who, x = 'O', 2
