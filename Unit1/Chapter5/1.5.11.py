@@ -8,3 +8,4 @@ while n < 10:
     n += 1
 print('')
 print('finish')
+print("\u00A5")
