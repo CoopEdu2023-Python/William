@@ -10,15 +10,15 @@ def su(x):
 num = int(input('请输入一个整数：'))
 print(f'{num}=', end='')
 for i in range(num):
-    if not(su(i+2)):
-        continue
-    if num % (i+2) == 0:
-        num /= (i+2)
-        print(i+2, end='')
-        if num == 1:
+    for j in range(num):
+        if not(su(j+2)):
+            continue
+        if num % (j + 2) == 0:
+            num /= (j + 2)
+            print(j+2, end='')
+            if num != 1:
+                print('*', end='')
             break
-        print('*', end='')
-
 
 
 

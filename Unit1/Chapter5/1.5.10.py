@@ -8,16 +8,18 @@ def su(x):
 
 
 num = int(input('请输入一个整数：'))
-i = 2
 print(f'{num}=', end='')
 while num != 1:
-    if not(su(i)):
+    i = 1
+    while 1:
         i += 1
-        continue
-    if num % i == 0:
-        num /= i
-        print(i, end='')
-        if num != 1:
-            print('*', end='')
-    i += 1
+        if not(su(i)):
+            continue
+        if num % i == 0:
+            num /= i
+            print(i, end='')
+            if num != 1:
+                print('*', end='')
+            break
+
 
