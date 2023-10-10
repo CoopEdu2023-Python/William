@@ -8,6 +8,7 @@ elif age >= 18:
     if age <= 24:
         print('你是个年轻人')
 elif 15 <= age <= 24:
+
     print('你是个年轻人')
     if age <= 20:
         print('你是个青少年')
