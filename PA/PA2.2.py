@@ -1,7 +1,7 @@
 import random
 
 
-# 输出和判断胜利
+# 输出棋盘和判断胜利
 def p(r, t, y, f, g, h, v, b, n):
     print(f' {r} | {t} | {y} '+'\n'+'———|———|———'+'\n'+f' {f} | {g} | {h} '+'\n'+'———|———|———'+'\n'+f' {v} | {b} | {n}')
     if r == t == y == 'X' or f == g == h == 'X' or v == b == n == 'X' or r == f == v == 'X' or\
