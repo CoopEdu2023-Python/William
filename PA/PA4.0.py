@@ -56,6 +56,15 @@ def win(piece):
         chessboard_print(piece, -1, 0)
         important_print('获胜者：玩家O', 1)
         return 2
+    x = 0
+
+    for j in range(9):
+        if piece[j] != ' ':
+            x += 1
+            if x == 9:
+                chessboard_print(piece, -1, 0)
+                important_print('平局', 1)
+                return 3
 
     return 0
 
