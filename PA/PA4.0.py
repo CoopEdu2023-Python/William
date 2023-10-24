@@ -32,6 +32,7 @@ def playing_method():
     while choose != '1' and choose != '2':
         print("请选择游戏模式：", "1.普通模式", "2.进阶模式", '(输入1或2）', sep='\n', end='')
         choose = input()
+        
     return int(choose) - 1
 
 
