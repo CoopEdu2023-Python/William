@@ -1,3 +1,4 @@
+import os
 import random
 import time
 
@@ -27,7 +28,7 @@ def important_print(string, end):
 
 # 玩法选择
 def playing_method():
-    print('\n' * 50)
+    os.system('cls')
     choose = ' '
     while choose != '1' and choose != '2':
         print("请选择游戏模式：", "1.普通模式", "2.进阶模式", '(输入1或2）', sep='\n', end='')
@@ -41,18 +42,18 @@ def win(piece):
     method_victory = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]]
     for j in method_victory:
         if piece[j[0]] == piece[j[1]] == piece[j[2]] == 'X':
-            print('\n' * 50)
+            os.system('cls')
             chessboard_print(piece, -1, 0)
             important_print('获胜者：玩家X', 1)
             return 1
         elif piece[j[0]] == piece[j[1]] == piece[j[2]] == 'O':
-            print('\n' * 50)
+            os.system('cls')
             chessboard_print(piece, -1, 0)
             important_print('获胜者：玩家O', 1)
             return 2
 
     if not' ' in piece:
-        print('\n' * 50)
+        os.system('cls')
         chessboard_print(piece, -1, 0)
         important_print('平局', 1)
         return 3
@@ -87,10 +88,11 @@ while 1:
     list_piece = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']  # 每个位置的状态
     game_num = 1  # 循环次数的计数
     delete = -1  # 初始化要删除的内容
-    flag = '初始化flag'  # 即将删除的内容的位置
+    flag = '初始化flag'
     while not win(list_piece):
         if flag != '输入错误':
-            print('\n' * 50 + f"玩家{who}的回合：")
+            os.system('cls')
+            print(f"玩家{who}的回合：")
         flag = '初始化flag'
         if game_num > 6:  # 即将删除的内容的位置
             delete = record_num[game_num - 7]
@@ -106,7 +108,8 @@ while 1:
                     if record_num[game_num - 7] == i:
                         flag = '落子位置即将删除'
                 if list_piece[i] != ' ' and flag != '落子位置即将删除':
-                    print('\n' * 50 + '这里已经下过了，请换一个位置' + '\n' + f"玩家{who}的回合：")
+                    os.system('cls')
+                    print('这里已经下过了，请换一个位置' + '\n' + f"玩家{who}的回合：")
                     flag = '输入错误'
                     break
 
@@ -116,7 +119,8 @@ while 1:
 
             # 防止下到不在棋盘上的的地方
             if i == 8:
-                print('\n' * 50 + '棋盘上没有这个位置，请换一个位置' + '\n' + f"玩家{who}的回合：")
+                os.system('cls')
+                print('棋盘上没有这个位置，请换一个位置' + '\n' + f"玩家{who}的回合：")
                 flag = '输入错误'
                 break
         if flag == '输入错误':
@@ -135,8 +139,8 @@ while 1:
 
         game_num += 1  # 记录局数
 
-    time.sleep(4)
-    print('\n' * 50)
+    time.sleep(5)
+    os.system('cls')
     important_print('退出游戏请输X，继续游戏请回车', 0)
     game_continues = input()
     if game_continues == 'X' or game_continues == 'x':
