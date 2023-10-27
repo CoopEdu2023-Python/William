@@ -139,7 +139,7 @@ while 1:
 
         game_num += 1  # 记录局数
 
-    time.sleep(5)
+    time.sleep(3.5)
     os.system('cls')
     important_print('退出游戏请输X，继续游戏请回车', 0)
     game_continues = input()

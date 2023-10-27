@@ -1,5 +1,7 @@
-# 输出和判断胜利
+import random
 
+
+# 输出和判断胜利
 def p(r, t, y, f, g, h, v, b, n):
     print(f' {r} | {t} | {y} '+'\n'+'———|———|———'+'\n'+f' {f} | {g} | {h} '+'\n'+'———|———|———'+'\n'+f' {v} | {b} | {n} ')
     if r == t == y == 'X' or f == g == h == 'X' or v == b == n == 'X' or r == f == v == 'X' or\
@@ -11,13 +13,15 @@ def p(r, t, y, f, g, h, v, b, n):
         print('获胜者：玩家2')
         return 2
     return 0
+
+
 # 输入失败的提示
 def f1():
     print('\n' * 50)
     print('输入无效')
     print(f"玩家{x}号的回合：")
 
-import random
+
 # 开始部分的提示
 print('不同位置的输入（和键盘的形状是一样的哦）')
 print(' r | t | y ' + '\n' + '———|———|———' + '\n' + ' f | g | h ' + '\n' + '———|———|———' + '\n' + ' v | b | n ')

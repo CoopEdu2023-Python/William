@@ -135,7 +135,7 @@ while 1:
 
         game_num += 1  # 记录局数
 
-    time.sleep(4)
+    time.sleep(3.5)
     print('\n' * 50)
     important_print('退出游戏请输X，继续游戏请回车', 0)
     game_continues = input()
