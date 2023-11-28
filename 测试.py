@@ -1,28 +1,29 @@
-class Phone2021:
-    def __init__(self):
-        self.OS = 'IOS'
+# 多态： 多种状态，即完成某个行为时，使用不同的对象会得到不同的状态。
 
-    def new(self):
-        print('lightning 接口')
-
-
-class Phone2022:
-    def new(self):
-        print('灵动岛')
+class Animal:  # 抽象类
+    def speak(self):
+        pass
 
 
-class Phone2023(Phone2022, Phone2021):  # 继承了Phone2022的属性与方法
-
-    def __init__(self):
-        super().__init__()
-        self.OS = 'CNMIOS'
-
-    def type_c(self):
-        print('type-c 充电口史诗级更新')
-        Phone2021().new()
-        print(f'上一代的系统为{Phone2021().OS}')
+class Dog(Animal):
+    def speak(self):
+        print('汪汪汪')
 
 
-a = Phone2023()
-a.new()
-print(a.OS)
+class Cat(Animal):
+    def speak(self):
+        print('喵喵喵')
+
+
+def make_noise(animal: Animal):
+    animal.speak()
+
+
+dog = Dog()
+cat = Cat()
+
+make_noise(dog)
+make_noise(cat)
+
+# 抽象类：含有抽象方法的类称之为抽象类
+# 抽象方法：方法体是空实现的（pass）称之为抽象方法
