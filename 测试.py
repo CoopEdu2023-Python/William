@@ -16,4 +16,5 @@ for i in s:
         r.append(i)
     n += 1
 r = ''.join(r)
+
 return r
