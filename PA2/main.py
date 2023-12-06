@@ -19,10 +19,10 @@ running = True
 
 stage = ('start', 'run', 'jump', 'dead')
 
-velocity = 10  # 速度（最好能整除2400）
+velocity = 5  # 速度（最好能整除2400）
 D = dinosaur.Dinosaur()
 G = scene.Ground()
-frames = 60  # 帧率
+frames = 120  # 帧率
 time = 0  # 循环次数
 
 pygame.display.set_caption("chrome://dino")  # 标题
@@ -44,7 +44,7 @@ while not pygame.key.get_pressed()[pygame.K_SPACE] and running:
 
 # game loop
 while running:
-    time += 1
+    time += 0.5
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

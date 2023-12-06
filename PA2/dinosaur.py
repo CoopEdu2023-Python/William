@@ -15,7 +15,7 @@ class Dinosaur:
         self.rect_start.left, self.rect_start.bottom = 70, 520
         self.rect_run.left, self.rect_run.bottom = 70, 520
         self.d_jump = 0
-        self.v1 = 20
+        self.v1 = 30
 
     def update(self, time):
         if pygame.key.get_pressed()[pygame.K_SPACE] and not self.d_jump:
@@ -24,15 +24,15 @@ class Dinosaur:
             if self.v1 == 0:
                 self.d_jump = 2
             else:
-                self.rect_run.bottom -= self.v1
+                self.rect_run.bottom -= self.v1/2
                 self.v1 -= 1
 
         if self.d_jump == 2:
-            if self.v1 == 20:
+            if self.v1 == 30:
                 self.d_jump = 0
             else:
+                self.rect_run.bottom += self.v1 / 2
                 self.v1 += 1
-                self.rect_run.bottom += self.v1
 
         print(self.v1)
 
