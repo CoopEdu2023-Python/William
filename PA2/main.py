@@ -45,6 +45,7 @@ while not pygame.key.get_pressed()[pygame.K_SPACE] and running:
 # game loop
 while running:
     time += 1
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -58,7 +59,8 @@ while running:
     # dino move
     screen.blit(D.d_run, D.rect_run)
 
-    D.run(time)
+    D.update(time)
+    D.pose(time)
     # move ground
     G.update(velocity)
 
