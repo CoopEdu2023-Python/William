@@ -7,7 +7,6 @@ class Dinosaur:
 
         self.d_start = pygame.image.load('./resources/images/dinosaur/dinosaur-start.png')
         self.d_run = pygame.image.load('./resources/images/dinosaur/dinosaur-run-1.png')
-        self.d_jump = pygame.image.load('./resources/images/dinosaur/dinosaur-jump.png')
 
         self.rect_start = self.d_start.get_rect()
         self.rect_run = self.d_run.get_rect()
@@ -15,7 +14,7 @@ class Dinosaur:
         self.rect_start.left, self.rect_start.bottom = 70, 520
         self.rect_run.left, self.rect_run.bottom = 70, 520
         self.d_jump = 0
-        self.v1 = 30
+        self.v1 = 20
 
     def update(self, time):
         if pygame.key.get_pressed()[pygame.K_SPACE] and not self.d_jump:
@@ -25,20 +24,18 @@ class Dinosaur:
                 self.d_jump = 2
             else:
                 self.rect_run.bottom -= self.v1/2
-                self.v1 -= 1
+                self.v1 -= 0.5
 
         if self.d_jump == 2:
-            if self.v1 == 30:
+            if self.v1 == 20:
                 self.d_jump = 0
             else:
                 self.rect_run.bottom += self.v1 / 2
-                self.v1 += 1
-
-        print(self.v1)
+                self.v1 += 0.5
 
     def pose(self, time):
         if self.rect_run.bottom == 520:
-            if time % 12 < 6:
+            if time % 24 < 12:
                 self.d_run = pygame.image.load('./resources/images/dinosaur/dinosaur-run-1.png')
             else:
                 self.d_run = pygame.image.load('./resources/images/dinosaur/dinosaur-run-2.png')
