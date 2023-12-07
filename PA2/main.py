@@ -14,18 +14,19 @@ def print_start():  # 显示开始提示
 
 # pygame setup
 pygame.init()
-screen = pygame.display.set_mode((1280, 720))
+screen_wide = 720
+screen_high = 1280
+screen = pygame.display.set_mode((screen_high, screen_wide))
 clock = pygame.time.Clock()
 running = True
-
+pygame.key.set_repeat(30)  # enable continuous keyboard event
 stage = ('start', 'run', 'jump', 'dead')
 
 velocity = 5
 D = dinosaur.Dinosaur()
 G = scene.Ground()
-C1 = obstacle.Cactus()
-C2 = obstacle.Cactus()
-C3 = obstacle.Cactus()
+C = obstacle.Cactus(1, 1)
+P = obstacle.Pterodactyl()
 frames = 120  # 帧率
 time = 0  # 循环次数
 cactus_stage = 0  # 仙人掌的运动阶段，0代表第一个开始运动，一次类推
@@ -34,14 +35,10 @@ pygame.display.set_caption("chrome://dino")  # 标题
 # game start
 while not pygame.key.get_pressed()[pygame.K_SPACE] and running:
     screen.fill("white")
-    screen.blit(D.d_start, D.rect_start)
-
+    D.draw(screen)
     print_start()
-    # flip() the display to put your work on screen
+
     pygame.display.flip()
-
-    # limits FPS to 60
-
     clock.tick(frames)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -50,44 +47,32 @@ while not pygame.key.get_pressed()[pygame.K_SPACE] and running:
 while running:
     time += 1
     velocity = 5
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if ((event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE or
+             event.type == pygame.KEYDOWN and event.key == pygame.K_UP) and
+                (D.d_status == 'run' or D.d_status == 'duck')):
+            if D.d_status == 'run':
+                D.sound_jump = 1
+            D.d_status = 'jump'
 
-    # fill the screen with a color to wipe away anything from last frame
-    screen.fill("white")
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN and D.d_status == 'run':
+            D.d_status = 'duck'
+        if not(event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN) and D.d_status == 'duck':
+            D.d_status = 'run'
 
-    # put ground on screen
-    screen.blit(G.ground1, G.rect1)
-    screen.blit(G.ground2, G.rect2)
-    screen.blit(D.d_run, D.rect_run)
-
-    screen.blit(C1.cactus1, C1.rect_cactus)
-    screen.blit(C2.cactus1, C2.rect_cactus)
-    screen.blit(C3.cactus1, C3.rect_cactus)
+    # put objects  on screen
+    for i in (G, D, C, P):
+        i.draw(screen)
     # dino move
     D.update(time)
-    D.pose(time)
+    P.update(time, velocity)
     # cactus move
-    C1.motion(velocity)
-    if C1.rect_cactus.left <= 640 and cactus_stage == 0:
-        cactus_stage += 1
-    if C2.rect_cactus.left <= 640 and cactus_stage == 1:
-        cactus_stage += 1
-    if cactus_stage:
-        C2.motion(velocity)
-    if cactus_stage == 2:
-        C3.motion(velocity)
-    # if -250 < C1.rect_cactus.centerx - C2.rect_cactus.centerx < 250:
-    #     C2.change()
-    # if -250 < C2.rect_cactus.centerx - C3.rect_cactus.centerx < 250:
-    #     C3.change()
-    # if -250 < C3.rect_cactus.centerx - C1.rect_cactus.centerx < 250:
-    #     C1.change()
-
+    C.update(velocity)
     # move ground
     G.update(velocity)
-
     # flip() the display to put your work on screen
     pygame.display.flip()
 
