@@ -20,6 +20,7 @@ screen_long = 1280
 velocity = 5
 frames = 120  # 帧率
 time = 0  # 计数器
+high_score = 0
 # 结束按钮动画计数器
 icon_time = 0
 page_icon = 7
@@ -53,14 +54,14 @@ while not pygame.key.get_pressed()[pygame.K_SPACE] and running:
     clock.tick(frames)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False
+            pygame.quit()
 # game loop
 while True:
     whether_create = 1
     cloud_num = 0
     create_time += 1
     time += 1
-    velocity = 5
+#    velocity += 0.1 if not time % 600 else 0
     # 初始化背景布
     screen.fill("white")
     # 键盘输入判断
@@ -82,6 +83,9 @@ while True:
     if D.d_status == 'die':
         running = False
 
+    # 最高分赋值
+    high_score = S.score if int(S.score) > high_score else high_score
+    print(high_score, S.score)
     cactus_group.update(velocity)
     pterodactyl_group.update(time, velocity)
     cloud_group.update(velocity)
@@ -90,7 +94,7 @@ while True:
     # move ground
     G.update(velocity)
     # print score
-    S.update(time, velocity)
+    S.update(time, velocity, high_score)
     # put objects  on screen
 
     for cactus in cactus_group:
@@ -124,7 +128,19 @@ while True:
     for i in (G, D, S):
         i.draw(screen)
 
+    # flip() the display to put your work on screen
+    pygame.display.flip()
+    # limits FPS to 60
+    clock.tick(frames)
+
     while not running:
+        E.update(icon_time)
+        if icon_time // E.switch_T < page_icon:
+            icon_time += 1
+
+        for i in (G, D, S, E):
+            i.draw(screen)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -151,19 +167,8 @@ while True:
 
                     running = True
 
-        E.update(icon_time)
-        if icon_time // E.switch_T < page_icon:
-            icon_time += 1
-
-        for i in (G, D, S, E):
-            i.draw(screen)
-
         # flip() the display to put your work on screen
         pygame.display.flip()
         # limits FPS to 60
         clock.tick(frames)
-    # flip() the display to put your work on screen
-    pygame.display.flip()
-    # limits FPS to 60
-    clock.tick(frames)
 

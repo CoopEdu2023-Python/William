@@ -54,30 +54,57 @@ class Scoreboard(pygame.sprite.Sprite):
         super().__init__()
         self.score_y = 40
         self.score_x = 1140
+        self.hi_score_x = 980
         self.score = 0
+        self.score_list = []
         self.images = list()
-        for i in range(10):
+        self.hi_image = '10'
+        for i in range(11):
             self.images.append(pygame.image.load(f'./resources/images/scoreboard/scoreboard-{i}.png'))
         self.images = tuple(self.images)
         print(self.images)
         self.image_score = pygame.Surface((20 * 5, 21))
+        self.image_hi_score = pygame.Surface((150, 21))
 
-    def update(self, time, v):
-        self.score = time * v * 0.015
-        self.image_score.fill('white')
-        self.score = list(str(int(self.score)))
-        print(self.score)
-        for i in range(5-len(self.score)):
-            self.score.insert(0, '0')
-        print(self.score)
+    def print_score(self, num: int):
+        score_list = list(str(num))
+        self.score = num
+
+        for i in range(5 - len(score_list)):
+            score_list.insert(0, '0')
+
         # add image to scoreboard
         for i in range(5):
-            self.image_score.blit(self.images[int(self.score[i])], (20 * i, 0))
+            self.image_score.blit(self.images[int(score_list[i])], (20 * i, 0))
 
         self.image_score.set_alpha(255)  # use set_alpha to make surface background transparent
 
+    def print_high_score(self, num: int):
+        self.image_hi_score.fill((255, 255, 255))
+        score_list = list(str(num))
+
+        for i in range(5 - len(score_list)):
+            score_list.insert(0, '0')
+        score_list.insert(0, self.hi_image)
+
+        # add image to scoreboard
+
+        for i in range(6):
+            __center_num = (0, 0) if i == 0 else (20 * (i+1) + 10, 0)
+            self.image_hi_score.blit(self.images[int(score_list[i])], __center_num)
+
+        self.image_hi_score.set_alpha(255)  # use set_alpha to make surface background transparent
+
+    def update(self, time, v, high_score):
+        self.score = time * v * 0.015
+        self.image_score.fill('white')
+
+        self.print_score(int(self.score))
+        self.print_high_score(high_score)
+
     def draw(self, screen):
         screen.blit(self.image_score, (self.score_x, self.score_y))
+        screen.blit(self.image_hi_score, (self.hi_score_x, self.score_y))
 
 
 class Moon:
