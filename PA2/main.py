@@ -27,6 +27,7 @@ page_icon = 7
 # 两个用于反派生成的变量
 create_time = 0
 when_create = 100
+mode = input()
 
 screen = pygame.display.set_mode((screen_long, screen_wide))
 clock = pygame.time.Clock()
@@ -47,14 +48,17 @@ pygame.display.set_caption("chrome://dino")  # 标题
 # game start
 while not pygame.key.get_pressed()[pygame.K_SPACE] and running:
     screen.fill("white")
+
     D.draw(screen)
     print_start()
 
-    pygame.display.flip()
-    clock.tick(frames)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
+
+    pygame.display.flip()
+    clock.tick(frames)
+
 # game loop
 while True:
     whether_create = 1
@@ -95,6 +99,23 @@ while True:
     G.update(velocity)
     # print score
     S.update(time, velocity, high_score)
+
+    for cloud in cloud_group:
+        cloud.draw(screen)
+        cloud_num += 1
+
+    # 创造敌人create enemy
+    if create_time == when_create:
+        if random.randint(0, 10):
+            cactus_group.add(obstacle.Cactus(mode))
+        else:
+            pterodactyl_group.add(obstacle.Pterodactyl(mode))
+        if cloud_num < 3 and whether_create % 2:
+            cloud_group.add(scene.Cloud())
+            whether_create += 0.5
+        when_create = random.randint(100, 300)
+        create_time = 0
+
     # put objects  on screen
 
     for cactus in cactus_group:
@@ -106,22 +127,6 @@ while True:
         pterodactyl.draw(screen)
         if pygame.sprite.collide_mask(D, pterodactyl):
             D.d_status = 'die'
-
-    for cloud in cloud_group:
-        cloud.draw(screen)
-        cloud_num += 1
-
-    # 创造敌人create enemy
-    if create_time == when_create:
-        if random.randint(0, 10):
-            cactus_group.add(obstacle.Cactus())
-        else:
-            pterodactyl_group.add(obstacle.Pterodactyl())
-        if cloud_num < 3 and whether_create % 2:
-            cloud_group.add(scene.Cloud())
-            whether_create += 0.5
-        when_create = random.randint(50, 250)
-        create_time = 0
 
     # draw 地面和恐龙
 
@@ -146,7 +151,8 @@ while True:
                 pygame.quit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
-                if (E.rect_restart.left < mouse_x < E.rect_restart.left + E.rect_restart.width) and (E.rect_restart.top < mouse_y < E.rect_restart.top + E.rect_restart.height):
+                if ((E.rect_restart.left < mouse_x < E.rect_restart.left + E.rect_restart.width) and
+                        (E.rect_restart.top < mouse_y < E.rect_restart.top + E.rect_restart.height)):
                     # upset
                     # 结束按钮动画计数器
                     icon_time = 0

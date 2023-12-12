@@ -63,4 +63,3 @@ class Dinosaur(pygame.sprite.Sprite):
 
     def draw(self, screen):
         screen.blit(self.dino, self.rect)
-

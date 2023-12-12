@@ -121,7 +121,7 @@ class EndingIcon:
         self.game_over_y = 280
         self.restart_y = 360
         self.switch_T = 6
-        self.game_over_image = './resources/images/ending/game-over.png'
+        self.game_over_image = f'./resources/images/ending/game-over.png'
         self.game_over = pygame.image.load(self.game_over_image)
         self.rect_game_over = self.game_over.get_rect()
         self.rect_game_over.center = (self.icon_x, self.game_over_y)
