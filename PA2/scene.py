@@ -3,26 +3,24 @@ import random
 
 
 class Ground:
-    def __init__(self):
+    def __init__(self, constant_num):
         pygame.display.set_icon(pygame.image.load('./resources/images/ending/restart-1.png'))  # 更改图标
-        self.ground_long = 2400  # 图像长 2400
-        self.ground_high = 520
         self.ground_images = './resources/images/ground/ground.png'
         self.ground1 = pygame.image.load(self.ground_images)
         self.ground2 = pygame.image.load(self.ground_images)
         self.rect1 = self.ground1.get_rect()
         self.rect2 = self.ground2.get_rect()
-        self.rect1.left, self.rect1.bottom = 0, self.ground_high
-        self.rect2.left, self.rect2.bottom = self.ground_long, self.ground_high
+        self.rect1.left, self.rect1.bottom = 0, constant_num.ground_high
+        self.rect2.left, self.rect2.bottom = constant_num.ground_long, constant_num.ground_high
 
-    def update(self, v):
-        self.rect1.left -= v
+    def update(self, constant_num):
+        self.rect1.left -= constant_num.velocity
         if self.rect1.right <= 0:
-            self.rect1.left = self.ground_long
+            self.rect1.left = constant_num.ground_long
 
-        self.rect2.left -= v
+        self.rect2.left -= constant_num.velocity
         if self.rect2.right <= 0:
-            self.rect2.left = self.ground_long
+            self.rect2.left = constant_num.ground_long
 
     def draw(self, screen):
         screen.blit(self.ground1, self.rect1)
@@ -30,18 +28,15 @@ class Ground:
 
 
 class Cloud(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, constant_num):
         super().__init__()
-        self.cloud_low = 400
-        self.cloud_high = 100
-        self.screen_long = 1280
         self.cloud_image = './resources/images/cloud/cloud.png'
         self.cloud_image = pygame.image.load(self.cloud_image)
         self.rect = self.cloud_image.get_rect()
-        self.rect.left, self.rect.bottom = self.screen_long, random.randint(self.cloud_high, self.cloud_low)
+        self.rect.left, self.rect.bottom = constant_num.screen_long, random.randint(constant_num.cloud_high, constant_num.cloud_low)
 
-    def update(self, v):
-        self.rect.left -= v*0.5
+    def update(self, constant_num):
+        self.rect.left -= constant_num.velocity * 0.5
         if self.rect.right <= 0:
             self.kill()
 

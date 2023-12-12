@@ -2,42 +2,32 @@ import pygame
 
 
 class Dinosaur(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, constant_num):
         super().__init__()
-        self.sound_file = "./resources/audios/jump.mp3"
-        self.dino_image_high = 520
-        self.dino_image_left = 70
-        self.dino_image_start = './resources/images/dinosaur/dinosaur-start.png'
-        self.dino_image_run1 = './resources/images/dinosaur/dinosaur-run-1.png'
-        self.dino_image_run2 = './resources/images/dinosaur/dinosaur-run-2.png'
-        self.dino_image_jump = './resources/images/dinosaur/dinosaur-jump.png'
-        self.dino_image_duck1 = './resources/images/dinosaur/dinosaur-duck-1.png'
-        self.dino_image_duck2 = './resources/images/dinosaur/dinosaur-duck-2.png'
-        self.dino_image_die = './resources/images/dinosaur/dinosaur-die-1.png'
-        self.dino = pygame.image.load(self.dino_image_start)
-        self.sound = pygame.mixer.Sound(self.sound_file)
+        self.dino = pygame.image.load(constant_num.dino_image_start)
+        self.sound = pygame.mixer.Sound(constant_num.sound_file)
         self.rect = self.dino.get_rect()
-        self.rect.left, self.rect.bottom = self.dino_image_left, self.dino_image_high
+        self.rect.left, self.rect.bottom = constant_num.dino_image_left, constant_num.dino_image_high
         self.v1, self.d_status, self.sound_jump = 20, 'run', 0
         self.v0 = self.v1
         self.mask = pygame.mask.from_surface(self.dino)  # create mask for collision detection
 
-    def switch_pose(self, time):
+    def switch_pose(self, constant_num):
         if self.d_status == 'die':
-            self.dino = pygame.image.load(self.dino_image_die)
-        elif self.rect.bottom == self.dino_image_high:
-            if time % 24 < 12:
+            self.dino = pygame.image.load(constant_num.dino_image_die)
+        elif self.rect.bottom == constant_num.dino_image_high:
+            if constant_num.time % 24 < 12:
                 if self.d_status == 'run' or self.d_status == 'fall':
-                    self.dino = pygame.image.load(self.dino_image_run1)
+                    self.dino = pygame.image.load(constant_num.dino_image_run1)
                 else:
-                    self.dino = pygame.image.load(self.dino_image_duck1)
+                    self.dino = pygame.image.load(constant_num.dino_image_duck1)
             else:
                 if self.d_status == 'run' or self.d_status == 'fall':
-                    self.dino = pygame.image.load(self.dino_image_run2)
+                    self.dino = pygame.image.load(constant_num.dino_image_run2)
                 else:
-                    self.dino = pygame.image.load(self.dino_image_duck2)
+                    self.dino = pygame.image.load(constant_num.dino_image_duck2)
         else:
-            self.dino = pygame.image.load(self.dino_image_jump)
+            self.dino = pygame.image.load(constant_num.dino_image_jump)
         self.mask = pygame.mask.from_surface(self.dino)  # create mask for collision detection
 
     def update(self, time):

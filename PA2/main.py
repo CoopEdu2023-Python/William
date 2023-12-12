@@ -3,23 +3,23 @@ import pygame
 import scene
 import dinosaur
 import obstacle
+import constant
+
+
+Constant_num = constant.Constant()
 
 
 def print_start():  # 显示开始提示
     font = pygame.font.Font(None, 75)  # 字体设置
     text = font.render('Press the space key to start the game', True, 'black')
     text_rect = text.get_rect()
-    text_rect.centerx, text_rect.bottom = 1280//2, 522
+    text_rect.centerx, text_rect.bottom = Constant_num.screen_long // 2, 522
     screen.blit(text, text_rect)
 
 
 # pygame setup
 pygame.init()
-screen_wide = 720
-screen_long = 1280
-velocity = 5
-frames = 120  # 帧率
-time = 0  # 计数器
+
 high_score = 0
 # 结束按钮动画计数器
 icon_time = 0
@@ -29,7 +29,6 @@ create_time = 0
 when_create = 100
 mode = input()
 
-screen = pygame.display.set_mode((screen_long, screen_wide))
 clock = pygame.time.Clock()
 running = True
 pygame.key.set_repeat(30)  # enable continuous keyboard event
@@ -38,18 +37,19 @@ cactus_group = pygame.sprite.Group()
 pterodactyl_group = pygame.sprite.Group()
 cloud_group = pygame.sprite.Group()
 
-D = dinosaur.Dinosaur()
-G = scene.Ground()
-S = scene.Scoreboard()
-E = scene.EndingIcon()
 
-pygame.display.set_caption("chrome://dino")  # 标题
+Dinosaur = dinosaur.Dinosaur(Constant_num)
+Ground = scene.Ground(Constant_num)
+Scoreboard = scene.Scoreboard()
+EndingIcon = scene.EndingIcon()
+
+screen = pygame.display.set_mode((Constant_num.screen_long, Constant_num.screen_wide))
 
 # game start
 while not pygame.key.get_pressed()[pygame.K_SPACE] and running:
     screen.fill("white")
 
-    D.draw(screen)
+    Dinosaur.draw(screen)
     print_start()
 
     for event in pygame.event.get():
@@ -57,14 +57,14 @@ while not pygame.key.get_pressed()[pygame.K_SPACE] and running:
             pygame.quit()
 
     pygame.display.flip()
-    clock.tick(frames)
+    clock.tick(Constant_num.frames)
 
 # game loop
 while True:
     whether_create = 1
     cloud_num = 0
     create_time += 1
-    time += 1
+    Constant_num.time += 1
 #    velocity += 0.1 if not time % 600 else 0
     # 初始化背景布
     screen.fill("white")
@@ -74,31 +74,27 @@ while True:
             pygame.quit()
         if ((event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE or
              event.type == pygame.KEYDOWN and event.key == pygame.K_UP) and
-                (D.d_status == 'run' or D.d_status == 'duck')):
-            if D.d_status == 'run':
-                D.sound_jump = 1
-            D.d_status = 'jump'
+                (Dinosaur.d_status == 'run' or Dinosaur.d_status == 'duck')):
+            if Dinosaur.d_status == 'run':
+                Dinosaur.sound_jump = 1
+            Dinosaur.d_status = 'jump'
 
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN and D.d_status == 'run':
-            D.d_status = 'duck'
-        if not(event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN) and D.d_status == 'duck':
-            D.d_status = 'run'
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN and Dinosaur.d_status == 'run':
+            Dinosaur.d_status = 'duck'
+        if not(event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN) and Dinosaur.d_status == 'duck':
+            Dinosaur.d_status = 'run'
 
-    if D.d_status == 'die':
+    if Dinosaur.d_status == 'die':
         running = False
 
     # 最高分赋值
-    high_score = S.score if int(S.score) > high_score else high_score
-    print(high_score, S.score)
-    cactus_group.update(velocity)
-    pterodactyl_group.update(time, velocity)
-    cloud_group.update(velocity)
-    # dino move
-    D.update(time)
-    # move ground
-    G.update(velocity)
+    high_score = Scoreboard.score if int(Scoreboard.score) > high_score else high_score
+    print(high_score, Scoreboard.score)
+
+    for i in (Ground, cloud_group, Dinosaur, cactus_group, pterodactyl_group):
+        i.update(Constant_num)
     # print score
-    S.update(time, velocity, high_score)
+    Scoreboard.update(Constant_num.time, Constant_num.velocity, high_score)
 
     for cloud in cloud_group:
         cloud.draw(screen)
@@ -107,43 +103,39 @@ while True:
     # 创造敌人create enemy
     if create_time == when_create:
         if random.randint(0, 10):
-            cactus_group.add(obstacle.Cactus(mode))
+            cactus_group.add(obstacle.Cactus(Constant_num, mode))
         else:
-            pterodactyl_group.add(obstacle.Pterodactyl(mode))
+            pterodactyl_group.add(obstacle.Pterodactyl(Constant_num, mode))
         if cloud_num < 3 and whether_create % 2:
-            cloud_group.add(scene.Cloud())
+            cloud_group.add(scene.Cloud(Constant_num))
             whether_create += 0.5
         when_create = random.randint(100, 300)
         create_time = 0
 
-    # put objects  on screen
-
+    # 死亡判定
     for cactus in cactus_group:
-        cactus.draw(screen)
-        if pygame.sprite.collide_mask(D, cactus):
-            D.d_status = 'die'
+        if pygame.sprite.collide_mask(Dinosaur, cactus):
+            Dinosaur.d_status = 'die'
 
     for pterodactyl in pterodactyl_group:
-        pterodactyl.draw(screen)
-        if pygame.sprite.collide_mask(D, pterodactyl):
-            D.d_status = 'die'
+        if pygame.sprite.collide_mask(Dinosaur, pterodactyl):
+            Dinosaur.d_status = 'die'
 
-    # draw 地面和恐龙
-
-    for i in (G, D, S):
+    # draw all
+    for i in (Ground, Dinosaur, Scoreboard, cactus_group, pterodactyl_group):
         i.draw(screen)
 
     # flip() the display to put your work on screen
     pygame.display.flip()
     # limits FPS to 60
-    clock.tick(frames)
+    clock.tick(Constant_num.frames)
 
     while not running:
-        E.update(icon_time)
-        if icon_time // E.switch_T < page_icon:
+        EndingIcon.update(icon_time)
+        if icon_time // EndingIcon.switch_T < page_icon:
             icon_time += 1
 
-        for i in (G, D, S, E):
+        for i in (Ground, Scoreboard, EndingIcon, Dinosaur):
             i.draw(screen)
 
         for event in pygame.event.get():
@@ -151,30 +143,29 @@ while True:
                 pygame.quit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
-                if ((E.rect_restart.left < mouse_x < E.rect_restart.left + E.rect_restart.width) and
-                        (E.rect_restart.top < mouse_y < E.rect_restart.top + E.rect_restart.height)):
+                if ((EndingIcon.rect_restart.left < mouse_x < EndingIcon.rect_restart.left + EndingIcon.rect_restart.width) and
+                        (EndingIcon.rect_restart.top < mouse_y < EndingIcon.rect_restart.top + EndingIcon.rect_restart.height)):
                     # upset
+                    Constant_num.__init__()
                     # 结束按钮动画计数器
                     icon_time = 0
                     page_icon = 7
                     # 两个用于反派生成的变量
                     create_time = 0
                     when_create = 100
-                    velocity = 5
-                    time = 0  # 计数器
+
                     for pterodactyl in pterodactyl_group:
                         pterodactyl.kill()
                     for cactus in cactus_group:
                         cactus.kill()
-                    D = dinosaur.Dinosaur()
-                    G = scene.Ground()
-                    S = scene.Scoreboard()
-                    E = scene.EndingIcon()
+                    Dinosaur = dinosaur.Dinosaur(Constant_num)
+                    Ground = scene.Ground(Constant_num)
+                    Scoreboard = scene.Scoreboard()
+                    EndingIcon = scene.EndingIcon()
 
                     running = True
 
         # flip() the display to put your work on screen
         pygame.display.flip()
         # limits FPS to 60
-        clock.tick(frames)
-
+        clock.tick(Constant_num.frames)
