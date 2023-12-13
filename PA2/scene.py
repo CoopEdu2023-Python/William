@@ -3,24 +3,22 @@ import random
 
 
 class Ground:
-    def __init__(self, constant_num):
-        pygame.display.set_icon(pygame.image.load('./resources/images/ending/restart-1.png'))  # 更改图标
-        self.ground_images = './resources/images/ground/ground.png'
-        self.ground1 = pygame.image.load(self.ground_images)
-        self.ground2 = pygame.image.load(self.ground_images)
+    def __init__(self, constant):
+        self.ground1 = pygame.image.load(constant.ground_images)
+        self.ground2 = pygame.image.load(constant.ground_images)
         self.rect1 = self.ground1.get_rect()
         self.rect2 = self.ground2.get_rect()
-        self.rect1.left, self.rect1.bottom = 0, constant_num.ground_high
-        self.rect2.left, self.rect2.bottom = constant_num.ground_long, constant_num.ground_high
+        self.rect1.left, self.rect1.bottom = 0, constant.ground_high
+        self.rect2.left, self.rect2.bottom = constant.ground_long, constant.ground_high
 
-    def update(self, constant_num):
-        self.rect1.left -= constant_num.velocity
+    def update(self, constant):
+        self.rect1.left -= constant.velocity
         if self.rect1.right <= 0:
-            self.rect1.left = constant_num.ground_long
+            self.rect1.left = constant.ground_long
 
-        self.rect2.left -= constant_num.velocity
+        self.rect2.left -= constant.velocity
         if self.rect2.right <= 0:
-            self.rect2.left = constant_num.ground_long
+            self.rect2.left = constant.ground_long
 
     def draw(self, screen):
         screen.blit(self.ground1, self.rect1)
@@ -28,15 +26,14 @@ class Ground:
 
 
 class Cloud(pygame.sprite.Sprite):
-    def __init__(self, constant_num):
+    def __init__(self, constant):
         super().__init__()
-        self.cloud_image = './resources/images/cloud/cloud.png'
-        self.cloud_image = pygame.image.load(self.cloud_image)
+        self.cloud_image = pygame.image.load(constant.cloud_image)
         self.rect = self.cloud_image.get_rect()
-        self.rect.left, self.rect.bottom = constant_num.screen_long, random.randint(constant_num.cloud_high, constant_num.cloud_low)
+        self.rect.left, self.rect.bottom = constant.screen_long, random.randint(constant.cloud_high, constant.cloud_low)
 
-    def update(self, constant_num):
-        self.rect.left -= constant_num.velocity * 0.5
+    def update(self, constant):
+        self.rect.left -= constant.velocity * 0.5
         if self.rect.right <= 0:
             self.kill()
 
@@ -45,61 +42,38 @@ class Cloud(pygame.sprite.Sprite):
 
 
 class Scoreboard(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, constant):
         super().__init__()
-        self.score_y = 40
-        self.score_x = 1140
-        self.hi_score_x = 980
-        self.score = 0
-        self.score_list = []
+        # images元组创建
         self.images = list()
-        self.hi_image = '10'
         for i in range(11):
-            self.images.append(pygame.image.load(f'./resources/images/scoreboard/scoreboard-{i}.png'))
+            self.images.append(pygame.image.load(constant.images_num[i]))
         self.images = tuple(self.images)
-        print(self.images)
-        self.image_score = pygame.Surface((20 * 5, 21))
-        self.image_hi_score = pygame.Surface((150, 21))
 
-    def print_score(self, num: int):
-        score_list = list(str(num))
-        self.score = num
+        self.image_score, self.image_hi_score = pygame.Surface(constant.score_area), pygame.Surface(constant.score_area)
 
-        for i in range(5 - len(score_list)):
-            score_list.insert(0, '0')
+        self.image_hi = pygame.image.load(constant.image_hi)
 
-        # add image to scoreboard
-        for i in range(5):
-            self.image_score.blit(self.images[int(score_list[i])], (20 * i, 0))
-
-        self.image_score.set_alpha(255)  # use set_alpha to make surface background transparent
-
-    def print_high_score(self, num: int):
-        self.image_hi_score.fill((255, 255, 255))
-        score_list = list(str(num))
-
-        for i in range(5 - len(score_list)):
-            score_list.insert(0, '0')
-        score_list.insert(0, self.hi_image)
-
-        # add image to scoreboard
-
-        for i in range(6):
-            __center_num = (0, 0) if i == 0 else (20 * (i+1) + 10, 0)
-            self.image_hi_score.blit(self.images[int(score_list[i])], __center_num)
-
-        self.image_hi_score.set_alpha(255)  # use set_alpha to make surface background transparent
-
-    def update(self, time, v, high_score):
-        self.score = time * v * 0.015
+    def update(self, constant):
+        constant.score = int(constant.time * constant.velocity * 0.015)
         self.image_score.fill('white')
+        self.image_hi_score.fill('white')
+        __score_list, __high_score_list = list(str(int(constant.score))), list(str(constant.high_score))
 
-        self.print_score(int(self.score))
-        self.print_high_score(high_score)
+        for i in range(5 - len(__score_list)):
+            __score_list.insert(0, '0')
+        for i in range(5 - len(__high_score_list)):
+            __high_score_list.insert(0, '0')
+
+        for i in range(5):
+            self.image_score.blit(self.images[int(__score_list[i])], (20 * i, 0))
+            self.image_hi_score.blit(self.images[int(__high_score_list[i])], (20 * i, 0))
 
     def draw(self, screen):
-        screen.blit(self.image_score, (self.score_x, self.score_y))
-        screen.blit(self.image_hi_score, (self.hi_score_x, self.score_y))
+        score_y, score_x, hi_score_x, hi_rect_x = 40, 1140, 1010, 960
+        screen.blit(self.image_hi, (hi_rect_x, score_y))
+        screen.blit(self.image_score, (score_x, score_y))
+        screen.blit(self.image_hi_score, (hi_score_x, score_y))
 
 
 class Moon:
@@ -111,26 +85,17 @@ class Star:
 
 
 class EndingIcon:
-    def __init__(self):
-        self.icon_x = 1280 / 2
-        self.game_over_y = 280
-        self.restart_y = 360
-        self.switch_T = 6
-        self.game_over_image = f'./resources/images/ending/game-over.png'
-        self.game_over = pygame.image.load(self.game_over_image)
+    def __init__(self, constant):
+
+        self.game_over = pygame.image.load(constant.game_over_image)
         self.rect_game_over = self.game_over.get_rect()
-        self.rect_game_over.center = (self.icon_x, self.game_over_y)
-
-        self.icon_image = []
-        for i in range(1, 9):
-            self.icon_image.append(f'./resources/images/ending/restart-{i}.png')
-
-        self.restart = pygame.image.load(self.icon_image[1])
+        self.rect_game_over.center = (constant.icon_x, constant.game_over_y)
+        self.restart = pygame.image.load(constant.icon_image[1])
         self.rect_restart = self.restart.get_rect()
-        self.rect_restart.center = (self.icon_x, self.restart_y)
+        self.rect_restart.center = (constant.icon_x, constant.restart_y)
 
-    def update(self, icon_time):
-        self.restart = pygame.image.load(self.icon_image[icon_time // self.switch_T])
+    def update(self, constant):
+        self.restart = pygame.image.load(constant.icon_image[constant.icon_time // constant.switch_T])
 
     def draw(self, screen):
         screen.blit(self.game_over, self.rect_game_over)
