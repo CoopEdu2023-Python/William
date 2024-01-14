@@ -76,14 +76,6 @@ class Scoreboard(pygame.sprite.Sprite):
         screen.blit(self.image_hi_score, (hi_score_x, score_y))
 
 
-class Moon:
-    pass
-
-
-class Star:
-    pass
-
-
 class EndingIcon:
     def __init__(self, constant):
 

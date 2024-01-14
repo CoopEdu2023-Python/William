@@ -40,7 +40,6 @@ class Constant:
 
         # cactus
         self.high_cactus = 520
-        self.cactus_image = f'./resources{mode}/images/cactus/cactus-{random.randint(1, 6)}.png'
 
         # pterodactyl
         self.pterodactyl_high_range = (520, 460, 420)

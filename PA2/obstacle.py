@@ -5,7 +5,7 @@ import pygame
 class Cactus(pygame.sprite.Sprite):
     def __init__(self, constant):
         super().__init__()
-        self.image = pygame.image.load(constant.cactus_image)
+        self.image = pygame.image.load(f'./resources/images/cactus/cactus-{random.randint(1, 6)}.png')
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.bottom = constant.screen_long, constant.high_cactus
         self.mask = pygame.mask.from_surface(self.image)

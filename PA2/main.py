@@ -84,8 +84,7 @@ while True:
 
     # 创造敌人create enemy
     if Constant.create_time == Constant.when_create:
-        if random.randint(0, 10)\
-                :
+        if random.randint(0, 10):
             cactus_group.add(obstacle.Cactus(Constant))
         else:
             pterodactyl_group.add(obstacle.Pterodactyl(Constant))
